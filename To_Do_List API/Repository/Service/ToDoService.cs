@@ -23,32 +23,41 @@ namespace To_Do_List_API.Repository.Service
         }
         public void Add(ToDoItems item)
         {
-            throw new NotImplementedException();
+            item.Id = _toDoItems.Any() ? _toDoItems.Max(t => t.Id) + 1 : 1;
+            _toDoItems.Add(item);
+            saveData();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _toDoItems.RemoveAll(x => x.Id == id);
+            saveData();
         }
 
-        public List<ToDoItems> GetAll()
-        {
-            throw new NotImplementedException();
-        }
+        public List<ToDoItems> GetAll() => _toDoItems;
 
-        public ToDoItems? GetById(Guid id)
+
+        public ToDoItems? GetById(int id)
         {
-            throw new NotImplementedException();
+            return _toDoItems.FirstOrDefault(x => x.Id == id);
         }
 
         public void saveData()
         {
-            throw new NotImplementedException();
+            var jsonSerilizer = JsonSerializer.Serialize(_toDoItems);
+            File.WriteAllText(_filePath, jsonSerilizer);
         }
 
         public void Update(int id, ToDoItems updatedItem)
         {
-            throw new NotImplementedException();
+            var item = _toDoItems.FirstOrDefault(x=>x.Id == id);
+            if(item != null)
+            {
+                item.Title = updatedItem.Title;
+                item.Description = updatedItem.Description;
+                item.isCompleted = updatedItem.isCompleted;
+                saveData();
+            }
         }
     }
 }
