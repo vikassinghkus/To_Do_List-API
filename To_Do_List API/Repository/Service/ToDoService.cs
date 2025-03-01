@@ -14,10 +14,17 @@ namespace To_Do_List_API.Repository.Service
         }
         private  List<ToDoItems> LoadData()
         {
+            if (!File.Exists(_filePath))
+            {
+                File.Create(_filePath);
+            }
             if (File.Exists(_filePath))
             {
-                var json = File.ReadAllText(_filePath);
-                return JsonSerializer.Deserialize<List<ToDoItems>>(json) ?? new List<ToDoItems>();
+                var jsonData = File.ReadAllText(_filePath);
+                if(jsonData != string.Empty)
+                {
+                    return JsonSerializer.Deserialize<List<ToDoItems>>(jsonData) ?? new List<ToDoItems>();
+                }
             }
             return new List<ToDoItems>();
         }
